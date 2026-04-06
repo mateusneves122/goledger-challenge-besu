@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+const uint256Bits = 256
+
 type Handler struct {
 	service *Service
 }
@@ -32,6 +34,10 @@ func (h *Handler) SetHandler(w http.ResponseWriter, r *http.Request) {
 	n, ok := new(big.Int).SetString(req.Value, 10)
 	if !ok || n.Sign() < 0 {
 		writeError(w, http.StatusBadRequest, "value must be a non-negative integer")
+		return
+	}
+	if n.BitLen() > uint256Bits {
+		writeError(w, http.StatusBadRequest, "value exceeds uint256 maximum")
 		return
 	}
 
