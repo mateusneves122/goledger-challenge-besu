@@ -18,18 +18,6 @@ cp app/.env.example app/.env
 make app-run
 ```
 
-> **Note:** `make start` runs `devnet-deploy` + `app-run` in sequence, but requires `CONTRACT_ADDRESS` to already be set in `app/.env`.
-
-## Running
-
-```bash
-make app-run    # Start API + PostgreSQL
-make app-down   # Stop and remove all containers
-make app-build  # Rebuild images
-make app-db-up  # Start only the database
-make app-db-down # Stop only the database
-```
-
 > For a full list of available commands, run `make help` from the repository root.
 
 ## Endpoints
@@ -41,11 +29,30 @@ make app-db-down # Stop only the database
 | `POST` | `/api/storage/sync` | Sync the blockchain value to the database |
 | `GET` | `/api/storage/check` | Check if blockchain and database values match |
 
+**Set** — sends a new value to the smart contract:
 ```bash
-curl -X POST localhost:8080/api/storage -H 'Content-Type: application/json' -d '{"value":"10000000000000000000000000000000011"}'
+curl -X POST localhost:8080/api/storage \
+  -H 'Content-Type: application/json' \
+  -d '{"value":"42"}'
+# {"tx_hash":"0x...","value":"10000000000000000000000000000000011"}
+```
+
+**Get** — reads the current value from the blockchain:
+```bash
 curl localhost:8080/api/storage
+# {"value":"10000000000000000000000000000000011"}
+```
+
+**Sync** — persists the blockchain value to the database:
+```bash
 curl -X POST localhost:8080/api/storage/sync
+# {"message":"synced","value":"10000000000000000000000000000000011"}
+```
+
+**Check** — compares blockchain and database values:
+```bash
 curl localhost:8080/api/storage/check
+# {"match":true}
 ```
 
 ## Architecture
