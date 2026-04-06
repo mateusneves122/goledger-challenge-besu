@@ -48,7 +48,7 @@ func NewBesuAdapter(rpcURL, contractAddr, privKeyHex string) (*BesuAdapter, erro
 	address := common.HexToAddress(contractAddr)
 	contract := bind.NewBoundContract(address, parsedABI, client, client, client)
 
-	privKey, err := crypto.HexToECDSA(privKeyHex)
+	privKey, err := crypto.ToECDSA(common.FromHex(privKeyHex))
 	if err != nil {
 		client.Close()
 		return nil, fmt.Errorf("load private key: %w", err)
