@@ -1,3 +1,28 @@
-# Misc
+# OS
 .DS_Store
-tmp
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Besu
+besu/bin/
+besu/nodes/
+besu/genesis/
+besu/tmp/
+besu/minimal/bootnodes.txt
+besu/minimal/bootnodes.txt.bak
+
+# Foundry
+SimpleStorage/out/
+SimpleStorage/cache/
+SimpleStorage/broadcast/
+
+# Go
+app/bin/
+
+# Env
+app/.env
