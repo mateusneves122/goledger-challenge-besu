@@ -1,0 +1,37 @@
+services:
+  postgres_simple_storage:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: user_local
+      POSTGRES_PASSWORD: pass_local
+      POSTGRES_DB: simple_storage
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_local -d simple_storage"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api-simple-storage:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file: .env
+    depends_on:
+      postgres_simple_storage:
+        condition: service_healthy
+    networks:
+      - default
+      - besu_test_network
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
+  besu_test_network:
+    external: true
